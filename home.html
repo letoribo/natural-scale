@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<script src="https://ajax.googleapis.com/ajax/libs/prototype/1.7.1.0/prototype.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/scriptaculous/1.9.0/scriptaculous.js"></script>
+<link rel="shortcut icon" href="images/mid.ico">
+<style type="text/css">
+body {background-color: #eee; color: rgb(132, 40, 111);}
+#string {margin-top: 65px; background-color:#aaa; height:5px; position:relative; width:91%}
+#first { position:absolute; left:0; bottom:0; color: yellow; height:54px; background-color:rgb(231, 91, 130); cursor: ew-resize;}
+#second {position:absolute; height:54px; color: yellow; background-color:rgb(100, 151, 192); cursor: ew-resize;}
+div {
+  min-height: 15px; min-width: 15px;
+}
+.btn-small{
+  padding:2px 10px; font-size:17px; -webkit-border-radius:3px; -moz-border-radius:3px; border-radius:3px;background-color:rgb(231, 91, 130);
+}
+.center {
+  width: 19%; margin: auto; height: auto; margin-top: 450px; position: absolute; top: 0; left: 0; bottom: 0; 
+  right: 0; /*max-height: 33%;*/
+}
+.Center {
+  width: 86%; height: 28%; margin: auto; margin-top: 25px; position: absolute; top: 0; left: 0; bottom: 0; right: 0; background-color: inherit;
+}
+.hidden {
+  visibility: hidden; width: 0px; height: 0px; margin: 0px; padding: 0px; border-style: none; border-width: 0px; max-width: 0px; max-height: 0px;
+} 
+div#piano {
+ position: relative;
+ color: #808080;
+ height: 82px;
+}
+div.ivory {
+ position: absolute;
+ left: 0px;
+ top: 0px;
+ border-left: 1px solid;
+ width: 1672px;
+}
+.ivory span {
+ background-color: #fffff0;
+ padding: 0px;
+ margin: 0px;
+ border: 1px solid;
+ border-left: 0px;
+ display: inline-block;
+ width: 21px;
+ height: 80px;
+ vertical-align: top;
+}
+div.ebony {
+ position: absolute;
+ left: 0px;
+ top: 0px;
+ margin-left: 14px;
+ width: 1672px;
+}
+.ebony span {
+ position: relative;
+ z-index: 1;
+ background-color: #111;
+ padding: 0px;
+ margin: 0px;
+ border: 1px solid;
+ display: inline-block;
+ width: 12px;
+ height: 56px;
+ margin-right: 12px;
+ vertical-align: top;
+}
+.ebony span.break {
+ border: 0px;
+ display: inline-block;
+ width: 1px;
+ margin-right: 11px;
+ visibility:hidden;
+}
+.ivory span.on {
+ background-color: #aaa;
+}
+.ebony span.on {
+ background-color: #aaa;
+}
+.content {background-color: ivory; -webkit-border-radius: 9px; -moz-border-radius: 9px; border-radius: 9px;}
+</style>
+</head>
+<body>
+<div id=piano class="Center">
+<div class=ebony>
+<span id=1></span><span id=3></span><span class=break></span><span id=6></span><span id=8></span><span id=10></span><span class=break></span><span id=13></span><span id=15></span><span class=break></span><span id=18></span><span id=20></span><span id=22></span><span class=break></span><span id=25></span><span id=27></span><span class=break></span><span id=30></span><span id=32></span><span id=34></span><span class=break></span><span id=37></span><span id=39></span><span class=break></span><span id=42></span><span id=44></span><span id=46></span><span class=break></span><span id=49></span><span id=51></span><span class=break></span><span id=54></span><span id=56></span><span id=58></span><span class=break></span><span id=61></span><span id=63></span><span class=break></span><span id=66></span><span id=68></span><span id=70></span><span class=break></span><span id=73></span><span id=75></span><span class=break></span><span id=78></span><span id=80></span><span id=82></span><span class=break></span><span id=85></span><span id=87></span><span class=break></span><span id=90></span><span id=92></span><span id=94></span><span class=break></span><span id=97></span><span id=99></span><span class=break></span><span id=102></span><span id=104></span><span id=106></span><span class=break></span><span id=109></span><span id=111></span><span class=break></span><span id=114></span><span id=116></span><span id=118></span><span class=break></span><span id=121></span><span id=123></span><span class=break></span><span id=126></span>
+</div>
+<div class=ivory>
+<span id=0></span><span id=2></span><span id=4></span><span id=5></span><span id=7></span><span id=9></span><span id=11></span><span id=12></span><span id=14></span><span id=16></span><span id=17></span><span id=19></span><span id=21></span><span id=23></span><span id=24></span><span id=26></span><span id=28></span><span id=29></span><span id=31></span><span id=33></span><span id=35></span><span id=36></span><span id=38></span><span id=40></span><span id=41></span><span id=43></span><span id=45></span><span id=47></span><span id=48></span><span id=50></span><span id=52></span><span id=53></span><span id=55></span><span id=57></span><span id=59></span><span id=60></span><span id=62></span><span id=64></span><span id=65></span><span id=67></span><span id=69></span><span id=71></span><span id=72></span><span id=74></span><span id=76></span><span id=77></span><span id=79></span><span id=81></span><span id=83></span><span id=84></span><span id=86></span><span id=88></span><span id=89></span><span id=91></span><span id=93></span><span id=95></span><span id=96></span><span id=98></span><span id=100></span><span id=101></span><span id=103></span><span id=105></span><span id=107></span><span id=108></span><span id=110></span><span id=112></span><span id=113></span><span id=115></span><span id=117></span><span id=119></span><span id=120></span><span id=122></span><span id=124></span><span id=125></span><span id=127></span>
+</div>
+</div>
+<center>
+<div id="string">
+<div id="first" title="first">1</div>
+<div id="second" title="second">1</div>
+</div>
+<p id="debug">&larr;&Oslash;&rarr;</p>
+<p id="debug2"></p>
+<p id="debug3"></p></center>
+<div id="center" class="center"><center>
+ <div class="content"><br>
+ <strong>Cents: </strong><br> 
+ <strong>Root:  <input type="number" id="root" min="0" max="120" value = 36 /></strong><br>
+ <strong>
+ </strong><br>
+ <strong></strong><br>
+ <strong>Frequency: 65.40639132514966</strong><br>
+ <strong></strong><br>
+ <p><b>Sound: </b><select id="midiSnd"></select></p> 
+ <p id=selectmididiv><b>MIDI Out: </b><select id="selectmidi"></select></p><br>
+</div> 
+</center></div>
+<script>
+function sonant(a, b){
+  arr = []; arr.push(a, b);
+  $('first').update(arr[0]); $('second').update(arr[1]);
+}
+$('center').hide();
+var Values = $R(1, 135);
+new Control.Slider(['first', 'second'],'string',{
+  values: Values, range: $R(1,135),
+  sliderValue: [1, 135],
+  onSlide: function(v){sonant($('first').getStyle('left') == "0px" ? 1 : v[0], (136 - v[1]));//$('first').setStyle({backgroundColor: 'lime'});
+   },
+  onChange: function(v){sonant($('first').getStyle('left') == "0px" ? 1 : v[0], (136 - v[1])); cnt(arr);}
+});
+var MSB = 100/32; var LSB = MSB/128; var root = 36;
+message = function(Cents){
+  NOTE = Math.round((64 + Math.floor(Cents / MSB)) / 32) - 2;
+  var amount = 64 + Math.floor(Cents/MSB);
+  var L = Math.sign(Math.round(Cents % MSB/LSB)) == -1 ? Math.round(Cents % MSB/LSB) + 128 : Math.round(Cents % MSB/LSB);     
+  var M = Math.sign(Math.round(Cents % MSB/LSB)) == -1 ? (amount - 32 * NOTE) -1 : amount - 32 * NOTE; 
+  console.log("%cJazz.MidiOut(0x90, " + (root + NOTE) + ", 127);", "color: blue; font-size: large");
+  console.log("%cJazz.MidiOut(0xe0, " + L + ", " + M + ");", "color: blue; font-size: large");
+  document.getElementsByTagName("strong")[0].update("Cents: " + Cents);
+  document.getElementsByTagName("strong")[2].update("Note: " + (root + NOTE));
+  document.getElementsByTagName("strong")[3].update("Pitch Bend:  (" + L + ", " + M + ")");
+  bgrnd(root, (root + NOTE));
+  if (typeof sound !== "undefined") sound(L, M);
+};
+ 
+function bgrnd(b, c){ 
+  Reset();
+  document.getElementById(b).className = "on"; 
+  if ($R(0, 127).include(c)) document.getElementById(c).className = "on";
+}; 
+
+function Reset(){
+  $R(0, 127).each(function(i){ document.getElementById(i).removeClassName('on');
+  });
+};
+    
+function log2(val) {
+  return Math.log(val) / Math.LN2;
+};
+
+var cnt = function (arr){
+  var f = arr[0]; var s = arr[1];
+  var Cents = 1200*log2(f/s);
+  message (Cents); button.show();
+  document.getElementsByTagName("strong")[5].update("Frequency: " + ((Math.pow(2, (root - 69) / 12) * 440) * f/s));
+  var M = f, N = s;
+	  for (var i = 2; i <= f; i++) {
+		  if (f % i === 0 &&  s % i === 0) M = f / i, N = s / i;
+	  }
+	  X = f + "&divide;" + s; Y = M + "&divide;" + N;
+	  $('debug2').update(X);
+    $('debug3').update(Y); $('debug').update(" ");
+    if(X == Y) $('debug3').update(" ");
+};
+
+  /*Element.addMethods({
+    getText: function(element) {
+        element = $(element);
+        return element.innerHTML.strip().stripTags().replace(/\n/g,' ').replace(/\s+/g,' ');
+    }
+});*/
+  var button = new Element("button", { 'class': 'btn-small' });
+  document.getElementsByTagName("center")[0].appendChild(button).update("&#9835;").hide();
+
+Event.observe(button, 'click', Play, false);
+
+function Play(){
+  document.getElementsByTagName("center")[0].removeChild(button); 
+  if(button) {$('first').update(1).setStyle({left: 0}); cnt([1, parseInt($('second').innerHTML)]); sonant(1, parseInt($('second').innerHTML));}
+  var div = new Element("div");
+  document.body.appendChild(div); $('selectmididiv').hide();
+	new Ajax.Request('./assets/_.jazz', {method: "get",
+    onSuccess: function(response) {
+      var div = new Element("div");
+      document.body.appendChild(div).insert(response.responseText);
+      sound = function (L, M){
+        if(Jazz && Jazz.isJazz){
+        	 Jazz.MidiOut(0xb0, 123, 0); Jazz.MidiOut(0x90, root, 127); Jazz.MidiOut(0x90, root + NOTE, 127); Jazz.MidiOut(0xe0, L, M );
+          if (select_out.length == 0) {
+            try{
+              var list = Jazz.MidiOutList();
+              list.each(function(i){
+                var opt = new Element('option').update(i);  console.log(i);
+                select_out.insert(opt); $('selectmididiv').show();
+              });
+            }
+            catch(err){}
+          }
+        }
+      }; 
+    }
+  });
+  $('center').show();
+  selSnd = $("midiSnd");  
+  select_out = $("selectmidi");
+  
+  var gmidi=['Acoustic Grand Piano','Bright Acoustic Piano','Electric Grand Piano','Honky-tonk Piano','Electric Piano 1','Electric Piano 2','Harpsichord','Clavinet',
+  'Celesta','Glockenspiel','Music Box','Vibraphone','Marimba','Xylophone','Tubular Bells','Dulcimer','Drawbar Organ','Percussive Organ','Rock Organ',
+  'Church Organ','Reed Organ','Accordion','Harmonica','Tango Accordion','Acoustic Guitar nylon','Acoustic Guitar steel','Electric Guitar jazz',
+  'Electric Guitar clean','Electric Guitar muted','Overdriven Guitar','Distortion Guitar','Guitar Harmonics','Acoustic Bass','Electric Bass finger','Electric Bass pick',
+  'Fretless Bass','Slap Bass 1','Slap Bass 2','Synth Bass 1','Synth Bass 2','Violin','Viola','Cello','Contrabass','Tremolo Strings','Pizzicato Strings','Orchestral Harp','Timpani',
+  'String Ensemble 1','String Ensemble 2','Synth Strings 1','Synth Strings 2','Choir Aahs','Voice Oohs','Synth Choir','Orchestra Hit','Trumpet','Trombone',
+  'Tuba','Muted Trumpet','French Horn','Brass Section','Synth Brass 1','Synth Brass 2','Soprano Sax','Alto Sax','Tenor Sax','Baritone Sax','Oboe','English Horn',
+  'Bassoon','Clarinet','Piccolo','Flute','Recorder','Pan Flute','Blown Bottle','Shakuhachi','Whistle','Ocarina','Lead 1 square','Lead 2 sawtooth','Lead 3 calliope',
+  'Lead 4 chiff','Lead 5 charang','Lead 6 voice','Lead 7 fifths','Lead 8 bass + lead','Pad 1 new age','Pad 2 warm','Pad 3 polysynth','Pad 4 choir','Pad 5 bowed',
+  'Pad 6 metallic','Pad 7 halo','Pad 8 sweep','FX 1 rain','FX 2 soundtrack','FX 3 crystal','FX 4 atmosphere','FX 5 brightness','FX 6 goblins','FX 7 echoes','FX 8 sci-fi',
+  'Sitar','Banjo','Shamisen','Koto','Kalimba','Bagpipe','Fiddle','Shanai','Tinkle Bell','Agogo','Steel Drums','Woodblock','Taiko Drum','Melodic Tom',
+  'Synth Drum','Reverse Cymbal','Guitar Fret Noise','Breath Noise','Seashore','Bird Tweet','Telephone Ring','Helicopter','Applause','Gunshot'];  
+  gmidi.each(function(i){
+    var opt = new Element('option').update(i);
+    selSnd.insert(opt);
+  });
+  Event.observe($('midiSnd'), 'change', changeSnd, false);
+  function changeSnd(){
+    current_snd = selSnd.selectedIndex;
+    if(Jazz && Jazz.isJazz) {
+      Jazz.MidiOut(0xC0, current_snd, 0);
+    }
+    selSnd.blur();
+  };
+
+  Event.observe($('selectmidi'), 'change', changemidi, false);
+  function changemidi(){
+    current_out = select_out.selectedIndex;
+    Jazz.MidiOutOpen(current_out);
+    select_out.blur();
+  };
+
+  Event.observe($('root'), 'change', Root, false);
+  function Root(){ 
+    root = parseInt($F("root")); document.getElementsByTagName("strong")[2].update("Note: " + root);
+    var coef = arr[0]/arr[1];
+    document.getElementsByTagName("strong")[4].update("Frequency: " + (Math.pow(2, (root - 69) / 12) * 440));
+    document.getElementsByTagName("strong")[5].update("Frequency: " + ((Math.pow(2, (root - 69) / 12) * 440) * coef));
+    bgrnd(root, (root + NOTE));
+    if(Jazz && Jazz.isJazz) {Jazz.MidiOut(0xb0, 123, 0); Jazz.MidiOut(0x90, root, 127);} 
+  };
+  if (typeof sound !== "undefined") sound();
+};
+</script>
+</body>
+</html>
