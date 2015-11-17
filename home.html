@@ -4,12 +4,18 @@
 <meta charset="utf-8" />
 <script src="https://ajax.googleapis.com/ajax/libs/prototype/1.7.1.0/prototype.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/scriptaculous/1.9.0/scriptaculous.js"></script>
+<script src="js/JZZ.js"></script>
 <link rel="shortcut icon" href="images/mid.ico">
 <style type="text/css">
 body {background-color: #eee; color: rgb(132, 40, 111);}
-#string {margin-top: 65px; background-color:#aaa; height:5px; position:relative; width:91%}
-#first { position:absolute; left:0; bottom:0; color: yellow; height:54px; background-color:rgb(231, 91, 130); cursor: ew-resize;}
-#second {position:absolute; height:54px; color: yellow; background-color:rgb(100, 151, 192); cursor: ew-resize;}
+#string {margin-top: 65px; background-color:#aaa; height:5px; position:relative; width:91%;}
+#first { 
+  position:absolute; left:0; bottom:0; color: yellow; height:54px; cursor: ew-resize; background-color: rgb(231, 91, 130); box-shadow: 5px 8px 8px #888888;
+}
+#debug2, #debug3 { font-size: 2rem; }
+#second {
+position:absolute; height:54px; color: yellow; cursor: ew-resize; box-shadow: 5px 8px 8px #888888; background-color: rgb(100, 151, 192);
+}
 div {
   min-height: 15px; min-width: 15px;
 }
@@ -18,7 +24,7 @@ div {
 }
 .center {
   width: 19%; margin: auto; height: auto; margin-top: 450px; position: absolute; top: 0; left: 0; bottom: 0; 
-  right: 0; /*max-height: 33%;*/
+  right: 0;
 }
 .Center {
   width: 86%; height: 28%; margin: auto; margin-top: 25px; position: absolute; top: 0; left: 0; bottom: 0; right: 0; background-color: inherit;
@@ -116,27 +122,63 @@ div.ebony {
 </div> 
 </center></div>
 <script>
-function sonant(a, b){
-  arr = []; arr.push(a, b);
-  $('first').update(arr[0]); $('second').update(arr[1]);
-}
-$('center').hide();
+var selSnd = $("midiSnd");  
+var select_out = $("selectmidi");
 var Values = $R(1, 135);
+var counter = -1;
+var current_snd = 0;
+var portNumber, midi_out_list = [];
+
+var findMidiOut = setInterval(function(){
+  counter++;
+  if (counter <= midi_out_list.length) {
+    Open(counter);
+  }
+  else {
+    clearInterval(findMidiOut);
+    $('selectmididiv').show();
+    Play();
+  }
+}, 1500);
+
+function Open(portNumber){
+  JZZ().openMidiOut(portNumber).
+  and(function(){
+    midi_out_list.push(this.name());
+  	 console.log('MIDI-Out' + portNumber + ' :', this.name());
+    var opt = new Element('option').update(this.name());
+    select_out.insert(opt);
+  });
+}
+   
 new Control.Slider(['first', 'second'],'string',{
   values: Values, range: $R(1,135),
   sliderValue: [1, 135],
-  onSlide: function(v){sonant($('first').getStyle('left') == "0px" ? 1 : v[0], (136 - v[1]));//$('first').setStyle({backgroundColor: 'lime'});
+  onSlide: function(v){sonant($('first').getStyle('left') == "0px" ? 1 : v[0], (136 - v[1])); highlight('slide');
    },
-  onChange: function(v){sonant($('first').getStyle('left') == "0px" ? 1 : v[0], (136 - v[1])); cnt(arr);}
+  onChange: function(v){sonant($('first').getStyle('left') == "0px" ? 1 : v[0], (136 - v[1])); cnt(arr); highlight('');}
 });
+
+highlight = function(){
+  slide = arguments[0];
+  if(slide === 'slide'){
+    $('first').setStyle({opacity: 0.7});
+    $('second').setStyle({opacity: 0.7});
+  }
+  else{
+    $('first').setStyle({opacity: 1});
+    $('second').setStyle({opacity: 1});    
+  }
+}
+
 var MSB = 100/32; var LSB = MSB/128; var root = 36;
-message = function(Cents){
+Message = function(Cents){
   NOTE = Math.round((64 + Math.floor(Cents / MSB)) / 32) - 2;
   var amount = 64 + Math.floor(Cents/MSB);
   var L = Math.sign(Math.round(Cents % MSB/LSB)) == -1 ? Math.round(Cents % MSB/LSB) + 128 : Math.round(Cents % MSB/LSB);     
   var M = Math.sign(Math.round(Cents % MSB/LSB)) == -1 ? (amount - 32 * NOTE) -1 : amount - 32 * NOTE; 
-  console.log("%cJazz.MidiOut(0x90, " + (root + NOTE) + ", 127);", "color: blue; font-size: large");
-  console.log("%cJazz.MidiOut(0xe0, " + L + ", " + M + ");", "color: blue; font-size: large");
+  console.log("%cJazz.MidiOut(0x90, " + (root + NOTE) + ", 127);", "color: blue;");
+  console.log("%cJazz.MidiOut(0xe0, " + L + ", " + M + ");", "color: blue;");
   document.getElementsByTagName("strong")[0].update("Cents: " + Cents);
   document.getElementsByTagName("strong")[2].update("Note: " + (root + NOTE));
   document.getElementsByTagName("strong")[3].update("Pitch Bend:  (" + L + ", " + M + ")");
@@ -161,12 +203,12 @@ function log2(val) {
 
 var cnt = function (arr){
   var f = arr[0]; var s = arr[1];
-  var Cents = 1200*log2(f/s);
-  message (Cents); button.show();
+  var Cents = 1200 * log2(f/s);
+  Message(Cents);
   document.getElementsByTagName("strong")[5].update("Frequency: " + ((Math.pow(2, (root - 69) / 12) * 440) * f/s));
   var M = f, N = s;
 	  for (var i = 2; i <= f; i++) {
-		  if (f % i === 0 &&  s % i === 0) M = f / i, N = s / i;
+		 if (f % i === 0 &&  s % i === 0) M = f / i, N = s / i;
 	  }
 	  X = f + "&divide;" + s; Y = M + "&divide;" + N;
 	  $('debug2').update(X);
@@ -174,47 +216,21 @@ var cnt = function (arr){
     if(X == Y) $('debug3').update(" ");
 };
 
-  /*Element.addMethods({
-    getText: function(element) {
-        element = $(element);
-        return element.innerHTML.strip().stripTags().replace(/\n/g,' ').replace(/\s+/g,' ');
-    }
-});*/
-  var button = new Element("button", { 'class': 'btn-small' });
-  document.getElementsByTagName("center")[0].appendChild(button).update("&#9835;").hide();
-
-Event.observe(button, 'click', Play, false);
+function sonant(a, b){
+  arr = []; arr.push(a, b);
+  $('first').update(arr[0]); $('second').update(arr[1]);
+}
 
 function Play(){
-  document.getElementsByTagName("center")[0].removeChild(button); 
-  if(button) {$('first').update(1).setStyle({left: 0}); cnt([1, parseInt($('second').innerHTML)]); sonant(1, parseInt($('second').innerHTML));}
-  var div = new Element("div");
-  document.body.appendChild(div); $('selectmididiv').hide();
-	new Ajax.Request('./assets/_.jazz', {method: "get",
-    onSuccess: function(response) {
-      var div = new Element("div");
-      document.body.appendChild(div).insert(response.responseText);
-      sound = function (L, M){
-        if(Jazz && Jazz.isJazz){
-        	 Jazz.MidiOut(0xb0, 123, 0); Jazz.MidiOut(0x90, root, 127); Jazz.MidiOut(0x90, root + NOTE, 127); Jazz.MidiOut(0xe0, L, M );
-          if (select_out.length == 0) {
-            try{
-              var list = Jazz.MidiOutList();
-              list.each(function(i){
-                var opt = new Element('option').update(i);  console.log(i);
-                select_out.insert(opt); $('selectmididiv').show();
-              });
-            }
-            catch(err){}
-          }
-        }
-      }; 
-    }
-  });
-  $('center').show();
-  selSnd = $("midiSnd");  
-  select_out = $("selectmidi");
-  
+  cnt([1, parseInt($('second').innerHTML)]); sonant(1, parseInt($('second').innerHTML));
+  sound = function (L, M){
+    portNumber = select_out.value;
+    L = L || 0;
+    M = M || 64;
+    JZZ().openMidiOut(portNumber).send([0xb0, 123, 0]).send([0xc0, current_snd])
+    .send([0x90, root, 127]).send([0x90, root + NOTE, 127]).send([0xe0, L, M]); 
+  }; 
+
   var gmidi=['Acoustic Grand Piano','Bright Acoustic Piano','Electric Grand Piano','Honky-tonk Piano','Electric Piano 1','Electric Piano 2','Harpsichord','Clavinet',
   'Celesta','Glockenspiel','Music Box','Vibraphone','Marimba','Xylophone','Tubular Bells','Dulcimer','Drawbar Organ','Percussive Organ','Rock Organ',
   'Church Organ','Reed Organ','Accordion','Harmonica','Tango Accordion','Acoustic Guitar nylon','Acoustic Guitar steel','Electric Guitar jazz',
@@ -234,16 +250,12 @@ function Play(){
   Event.observe($('midiSnd'), 'change', changeSnd, false);
   function changeSnd(){
     current_snd = selSnd.selectedIndex;
-    if(Jazz && Jazz.isJazz) {
-      Jazz.MidiOut(0xC0, current_snd, 0);
-    }
     selSnd.blur();
   };
 
   Event.observe($('selectmidi'), 'change', changemidi, false);
   function changemidi(){
-    current_out = select_out.selectedIndex;
-    Jazz.MidiOutOpen(current_out);
+    portNumber = select_out.selectedIndex;
     select_out.blur();
   };
 
@@ -254,10 +266,12 @@ function Play(){
     document.getElementsByTagName("strong")[4].update("Frequency: " + (Math.pow(2, (root - 69) / 12) * 440));
     document.getElementsByTagName("strong")[5].update("Frequency: " + ((Math.pow(2, (root - 69) / 12) * 440) * coef));
     bgrnd(root, (root + NOTE));
-    if(Jazz && Jazz.isJazz) {Jazz.MidiOut(0xb0, 123, 0); Jazz.MidiOut(0x90, root, 127);} 
+    portNumber = select_out.value;
+    JZZ().openMidiOut(portNumber).send([0xb0, 123, 0]).send([0x90, root, 127]);
   };
   if (typeof sound !== "undefined") sound();
 };
+
 </script>
 </body>
 </html>
