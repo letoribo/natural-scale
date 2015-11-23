@@ -127,8 +127,7 @@ var select_out = $("selectmidi");
 var Values = $R(1, 135);
 var counter = -1;
 var current_snd = 0;
-var portNumber, midi_out_list = [];
-
+var midi_out_list = [];
 var findMidiOut = setInterval(function(){
   counter++;
   if (counter <= midi_out_list.length) {
@@ -136,7 +135,6 @@ var findMidiOut = setInterval(function(){
   }
   else {
     clearInterval(findMidiOut);
-    $('selectmididiv').show();
     Play();
   }
 }, 1500);
