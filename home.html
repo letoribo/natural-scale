@@ -125,29 +125,17 @@ div.ebony {
 var selSnd = $("midiSnd");  
 var select_out = $("selectmidi");
 var Values = $R(1, 135);
-var counter = -1;
 var current_snd = 0;
-var midi_out_list = [];
-var findMidiOut = setInterval(function(){
-  counter++;
-  if (counter <= midi_out_list.length) {
-    Open(counter);
-  }
-  else {
-    clearInterval(findMidiOut);
-    Play();
-  }
-}, 1500);
 
-function Open(portNumber){
-  JZZ().openMidiOut(portNumber).
-  and(function(){
-    midi_out_list.push(this.name());
-  	 console.log('MIDI-Out' + portNumber + ' :', this.name());
-    var opt = new Element('option').update(this.name());
+JZZ().and(function(){
+    var outs = this.info().outputs;
+    for (var i = 0; i < outs.length; i++) {
+    console.log('MIDI-Out' + i + ' :', outs[i].name);
+    var opt = new Element('option').update(outs[i].name);
     select_out.insert(opt);
-  });
-}
+  } 
+  Play();
+});
    
 new Control.Slider(['first', 'second'],'string',{
   values: Values, range: $R(1,135),
